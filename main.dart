@@ -1,270 +1,111 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(TravelAssistantApp());
+void main() => runApp(MyApp());
+
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
 }
 
-class TravelAssistantApp extends StatelessWidget {
+class _MyAppState extends State<MyApp> {
+  bool isDarkTheme = false;
+
+  void toggleTheme(bool value) {
+    setState(() => isDarkTheme = value);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'India Travel Assistant',
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
-      home: CitySelectionPage(),
+      title: 'India Travel Info',
+      theme: isDarkTheme ? ThemeData.dark() : ThemeData.light(),
+      home: LoginPage(toggleTheme: toggleTheme, isDarkTheme: isDarkTheme),
     );
   }
 }
 
-class CitySelectionPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
+  final Function(bool) toggleTheme;
+  final bool isDarkTheme;
+
+  LoginPage({required this.toggleTheme, required this.isDarkTheme});
+
   @override
-  _CitySelectionPageState createState() => _CitySelectionPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _CitySelectionPageState extends State<CitySelectionPage> {
-  String? selectedCity;
+class _LoginPageState extends State<LoginPage> {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  final Map<String, Map<String, List<Map<String, String>>>> cityData = {
-    'Delhi': {
-      'Tourist Places': [
-        {
-          'name': 'Red Fort',
-          'image':
-              'https://media.istockphoto.com/id/530741074/photo/red-fort-lal-qila-with-indian-flag-delhi-india.jpg?s=612x612&w=0&k=20&c=7BTI-dgQNPPTq2yARrwIBf2yIqO4PUPX1EJY5ITIyoM='
-        },
-        {
-          'name': 'India Gate',
-          'image':
-              'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/42/73/a4/india-gate.jpg?w=900&h=500&s=1'
-        },
-        {
-          'name': 'Qutub Minar',
-          'image':
-              'https://images.hindustantimes.com/rf/image_size_630x354/HT/p2/2019/08/28/Pictures/august-hindustan-adrija-august-illuminated-minar-mehrauli_4852eb76-c8f9-11e9-80e5-a7e5951f3eba.jpg'
-        },
-        {
-          'name': 'Lotus Temple',
-          'image':
-              'https://th.bing.com/th/id/R.c7d6387ff40525457b8b7ead2d42de0d?rik=9%2bpqDVSa8JX2qQ&riu=http%3a%2f%2fworldtoptop.com%2fwp-content%2fuploads%2f2011%2f10%2fAerial-View-of-Lotus-Temple.jpg&ehk=sWgy3OaWT1ifDXdYy2CzJ%2fOp2Kk4c1%2fSyel6BYzn1Dg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1'
-        },
-      ],
-      'Airports': [
-        {
-          'name': 'Indira Gandhi International Airport',
-          'image':
-              'https://th.bing.com/th/id/OIP.4NDN6IUXEqhZhdCeMMKOpAHaEL?cb=iwp2&rs=1&pid=ImgDetMain'
-        }
-      ],
-      'Railway Stations': [
-        {
-          'name': 'New Delhi Railway Station',
-          'image':
-              'https://thumbs.dreamstime.com/z/delhi-india-april-new-railway-station-busiest-terms-train-frequency-passenger-movement-holds-record-largest-209608762.jpg'
-        },
-        {
-          'name': 'Hazrat Nizamuddin',
-          'image':
-              'https://th.bing.com/th/id/OIP.6c3LhkDMP1jbZ8JwqeCcSAHaFj?cb=iwp2&rs=1&pid=ImgDetMain'
-        }
-      ],
-      'Famous Food': [
-        {
-          'name': 'Chole Bhature',
-          'image': 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Chole_Bhature.jpg'
-        },
-        {
-          'name': 'Paratha',
-          'image':
-              'https://static.vecteezy.com/system/resources/previews/011/396/034/non_2x/lachha-paratha-flatbread-on-brass-plate-isolated-photo.jpg'
-        },
-        {
-          'name': 'Street Chaat',
-          'image':
-              'https://th.bing.com/th/id/OIP.UtsFnq52QAI3fG1Lfgo0IAHaD4?cb=iwp2&rs=1&pid=ImgDetMain'
-        }
-      ]
-    },
-    'Ahmedabad': {
-  'Tourist Places': [
-    {'name': 'Sabarmati Ashram', 'image': 'https://th.bing.com/th/id/OIP.k4NOt6DIi_aVvYS9RYqGOAHaE6?cb=iwp2&rs=1&pid=ImgDetMain'},
-    {'name': 'Kankaria Lake', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxU-MMYsEFLEpsueATc0juJNp-dIHMRzILwA&s'},
-    {'name': 'Adalaj Stepwell', 'image': 'https://www.shutterstock.com/image-photo/10-20-2007-vintage-inner-600nw-2265224923.jpg'}
-  ],
-  'Airports': [
-    {'name': 'Sardar Vallabhbhai Patel International Airport', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7GW8jIQ7X0rqrzkrMnCD87M4PkK4aQgO7Yw&s'}
-  ],
-  'Railway Stations': [
-    {'name': 'Ahmedabad Junction', 'image': 'https://c8.alamy.com/comp/J18N61/railway-station-ahmedabad-gujarat-india-asia-ahmedabad-junction-train-J18N61.jpg'}
-  ],
-'Famous Food': [
-    {'name': 'Dhokla', 'image': 'https://th.bing.com/th/id/OIP.Sx7H-UCxHgSMamYu7GcS0QHaGA?cb=iwp2&rs=1&pid=ImgDetMain'},
-    {'name': 'Fafda Jalebi', 'image': 'https://th.bing.com/th/id/OIP.CO2lX2mvdnPgAdkgao2p8QHaE8?cb=iwp2&rs=1&pid=ImgDetMain'}
-  ]
-},
-  'Pune': {
-  'Tourist Places': [
-    {'name': 'Shaniwar Wada', 'image': 'https://th.bing.com/th/id/R.d0179915561d962303d01b27780827a2?rik=714qptRyzQIRgg&riu=http%3a%2f%2fwww.thehistoryhub.com%2fwp-content%2fuploads%2f2016%2f11%2fShaniwar-Wada.jpg&ehk=w6%2fCQzA2uNtJOvp8PixkR36x6YeFw%2fEL8dPHhvNpUU4%3d&risl=&pid=ImgRaw&r=0'},
-    {'name': 'Aga Khan Palace', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjY1hlBsqwzBrY_MjY-Xohyy8iC_IT1ECGUg&s'},
-    {'name': 'Sinhagad Fort', 'image': 'https://www.connectingtraveller.com/images/localtip/1632427768images%20-%202021-09-24T013751.092.jpeg'}
-  ],
-  'Airports': [
-    {'name': 'Pune Airport', 'image': 'https://th.bing.com/th/id/OIP.9mEZ3O6lwL9PIeUWbCvHZwAAAA?cb=iwp2&rs=1&pid=ImgDetMain'}
-  ],
-    'Railway Stations': [
-    {'name': 'Pune Junction', 'image': 'https://i.ytimg.com/vi/evHSkirzNvw/maxresdefault.jpg'}
-  ],
-  'Famous Food': [
-    {'name': 'Misal Pav', 'image': 'https://th.bing.com/th/id/OIP.HHDz9QdhThCLI2vSwdRBRAAAAA?cb=iwp2&rs=1&pid=ImgDetMain'},
-    {'name': 'Vada Pav', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTWylHKI2fEbe3N8yygbSHKJ8YKKpeWx_enw&s'}
-  ]
-},
-   'Kochi': {
-  'Tourist Places': [
-    {'name': 'Fort Kochi', 'image': 'https://th.bing.com/th/id/OIP.TtU0_eix2nqc1YYeJRK60QHaD2?cb=iwp2&rs=1&pid=ImgDetMain'},
-    {'name': 'Chinese Fishing Nets', 'image': 'https://th.bing.com/th/id/R.ce20e12d19e61ea7b1c89f0af1209057?rik=AtbQlTvmXZn9hw&riu=http%3a%2f%2ftravel.paintedstork.com%2fblog%2fwp-content%2fuploads%2f2012%2f01%2ffort-kochi-chinese-fishing-nets.jpg&ehk=mGGon2lHbBilrPf2ijmjm0p%2fl0gTeQr%2bY8joteLqrXw%3d&risl=&pid=ImgRaw&r=0'},
-    {'name': 'Mattancherry Palace', 'image': 'https://2.bp.blogspot.com/-qmqRxjuo3yE/WsHOOOfrQrI/AAAAAAAAZeQ/H8-MUVt-dIA0gajUaYwYtUOmNCxVVYa-gCLcBGAs/s1600/mattancherry-palace-kochi-head-577.jpeg'}
-  ],
-  'Airports': [
-    {'name': 'Cochin International Airport', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRklJ8CwPuya_5sbE1tDEq-HvV7GLUW3xo6HA&s'}
-  ],
-   'Railway Stations': [
-    {'name': 'Ernakulam Junction', 'image': 'https://th.bing.com/th/id/R.1ccce03438ac99a2cae28e057a9709b7?rik=P8FYY6dtbtSfLg&riu=http%3a%2f%2fphotos.wikimapia.org%2fp%2f00%2f02%2f13%2f08%2f13_big.jpg&ehk=qqN81O3bwuOC%2f3w7fJaPOdOoBaPygwIHgIpS8P%2b7c%2fg%3d&risl=&pid=ImgRaw&r=0'}
-  ],
-  'Famous Food': [
-    {'name': 'Kerala Sadya', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqd-d5H0ZWGoxNEq3IJPFIfpd6BR8DzYqqzQ&s'},
-    {'name': 'Appam with Stew', 'image': 'https://th.bing.com/th/id/OIP.e3aTA47UZaL29LEKRmEIOAHaKv?cb=iwp2&rs=1&pid=ImgDetMain'}
-  ]
-},
-    'Hyderabad': {
-  'Tourist Places': [
-    {'name': 'Charminar', 'image': 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Charminar%2C_Hyderabad.JPG'},
-    {'name': 'Golconda Fort', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6bJuqOZaWWaYRBbBfKGFD0XGFHEZbPOa8Tw&s'},
-    {'name': 'Hussain Sagar Lake', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTO1_CFKdRomwIFvx-uzKGaDh6xflzc1r97BQ&s'}
-  ],
-  'Airports': [
-    {'name': 'Rajiv Gandhi International Airport', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaJOoDLSyKFHqsshF0DLH3gkfolW5E_bS77A&'}
-  ],
-    'Railway Stations': [
-    {'name': 'Secunderabad Junction', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkfTB1FIpXrcoromtQRL8fu5zcWlNIK0wEag&s'},
-    {'name': 'Hyderabad Deccan', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvzzEOVOcdGMY2UEVf0HXaH_stwaFLntQvWQ&s'}
-  ],
-  'Famous Food': [
-    {'name': 'Hyderabadi Biryani', 'image': 'https://th.bing.com/th/id/OIP.ZeOVmGGIkoMrAVId0KMmDAAAAA?cb=iwp2&rs=1&pid=ImgDetMain'},
-    {'name': 'Haleem', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZRM2w8cnX5yq1TQYLO2Yv62BohLfx44sVWQ&s'}
-  ]
-},
-   'Chennai': {
-  'Tourist Places': [
-    {'name': 'Marina Beach', 'image': 'https://img.staticmb.com/mbcontent/images/uploads/2022/9/Marina-Beach-Aerial-view.jpg'},
-    {'name': 'Kapaleeshwarar Temple', 'image': 'https://c8.alamy.com/comp/D0JCFA/kapaleeswarar-templehindusaivite-in-mylapore-chennaimadras-tamil-naduindia-D0JCFA.jpg'},
-    {'name': 'Fort St. George', 'image': 'https://narrativeby.com/wp-content/uploads/2023/09/Fort-St.-George-1024x576.webp'}
-  ],
-  'Airports': [
-    {'name': 'Chennai International Airport', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyV8x4CM1JQwfMCypx3Y7OiOznoxaAc77KMg&s'}
-  ],
-   'Railway Stations': [
-    {'name': 'Chennai Central', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQez7LbPFIlutO30ecg8RconfR_kJkFce4-2A&s'},
-    {'name': 'Egmore Station', 'image': 'https://c8.alamy.com/comp/FFYTBN/egmore-railway-station-in-madras-chennai-tamil-nadu-india-FFYTBN.jpg'}
-  ],
-  'Famous Food': [
-    {'name': 'Dosa', 'image': 'https://th.bing.com/th/id/OIP.iewXlt-r6IOnM8Tz4JF6yQHaEW?cb=iwp2&rs=1&pid=ImgDetMain'},
-    {'name': 'Sambar Idli', 'image': 'https://th.bing.com/th/id/OIP.KolKVqx_2G-fEOIDk_upHgHaLH?cb=iwp2&rs=1&pid=ImgDetMain'}
-  ]
-},
-   'Mumbai': {
-  'Tourist Places': [
-    {'name': 'Gateway of India', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtZmCX_SlTGb48361Cxp5fRYaMKOYfhaZBgg&s'},
-    {'name': 'Marine Drive', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1pxe8vkKTt3WMVvUY7d9iPHNPkPqkuuyN6Q&s'},
-    {'name': 'Elephanta Caves', 'image': 'https://th.bing.com/th/id/OIP.InQ1ACZrE8dTeCrXHopx4AHaEK?cb=iwp2&rs=1&pid=ImgDetMain'}
-  ],
-  'Airports': [
-    {'name': 'Chhatrapati Shivaji Maharaj International Airport', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTYgFeFxdgZAyC3M8DnHgt5I1shYUknq8dvA&s'}
-  ],
-  'Railway Stations': [
-    {'name': 'Chhatrapati Shivaji Terminus (CST)', 'image': 'https://th.bing.com/th/id/OIP.V9UC5bZ2HQQ0_YXEeiJDmAHaE8?cb=iwp2&rs=1&pid=ImgDetMain'},
-    {'name': 'Dadar', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRag-KBEwWWIPWN-ZCPScaVuSP17w8jPwZQig&s'}
-  ],
-   'Famous Food': [
-    {'name': 'Vada Pav', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTWylHKI2fEbe3N8yygbSHKJ8YKKpeWx_enw&s'},
-    {'name': 'Pav Bhaji', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdSfXqaZswrvwPS32dG3CHQpJVSCTCa5VwPg&s'}
-  ]
-},
-   'Kashmir': {
-  'Tourist Places': [
-    {'name': 'Dal Lake', 'image': 'https://as1.ftcdn.net/v2/jpg/04/37/91/72/1000_F_437917209_fZPcDkpnEpZJ2oWFpNbqYATQ39UJFcZl.jpg'},
-    {'name': 'Gulmarg', 'image': 'https://th.bing.com/th/id/OIP.U2epJau-SwblG8K_5ICQDAHaE8?cb=iwp2&rs=1&pid=ImgDetMain'},
-    {'name': 'Pahalgam', 'image': 'https://www.ekashmirtourism.com/wp-content/uploads/2022/08/Baisaran-Valley-pahalgam.jpg'}
-  ],
-  'Airports': [
-    {'name': 'Sheikh ul-Alam International Airport (Srinagar)', 'image': 'https://freepresskashmir.news/wp-content/uploads/2023/01/Apron_view_at_Srinagar_International_Airport.jpg'}
-  ],
-  'Railway Stations': [
-    {'name': 'Srinagar Railway Station', 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHFHlGEE332k6jx3aSiyQYM7mW1hRzT8vaMg&s'}
-  ],
-   'Famous Food': [
-    {'name': 'Rogan Josh', 'image': 'https://th.bing.com/th/id/R.22003c1631159f2c31b3253c5434ec76?rik=Ttc4r89KIs0OOw&riu=http%3a%2f%2fwww.archanaskitchen.com%2fimages%2farchanaskitchen%2f1-Author%2fShaheen_Ali%2fKashmiri_Rogan_Josh.jpg&ehk=eG9ODF%2bJfnqfWKoCEJ%2bYDPalZKPPlpdB4C05qSpuy7o%3d&risl=&pid=ImgRaw&r=0'},
-    {'name': 'Kashmiri Kahwa', 'image': 'https://www.vegrecipesofindia.com/wp-content/uploads/2019/07/kahwa-recipe.jpg'}
-  ]
-},
+  void _login() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CityListScreen(
+          toggleTheme: widget.toggleTheme,
+          isDarkTheme: widget.isDarkTheme,
+        ),
+      ),
+    );
+  }
 
+  void _goToSignup() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignupPage()),
+    );
+  }
 
-    // Other cities omitted for brevity — use your full map here
-    };
-
+  Widget _socialButton(String text, IconData icon, Color color) {
+    return ElevatedButton.icon(
+      onPressed: () {},
+      icon: Icon(icon, color: Colors.white),
+      label: Text(text),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        minimumSize: Size(double.infinity, 40),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('India Travel Assistant')),
-      body: Container(
-        color: Color.fromARGB(207, 12, 2, 149), // light pink background color
-        padding: const EdgeInsets.all(16.0),
+      backgroundColor: Colors.deepOrange[50],
+      appBar: AppBar(title: Text('Login')),
+      body: Padding(
+        padding: EdgeInsets.all(24),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            DropdownButtonFormField<String>(
-              value: selectedCity,
-              hint: Text(
-                "Select an Indian City",
-                style: TextStyle(fontSize: 12),
+            Text(
+              'Welcome to India Travel App',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepOrange,
               ),
-              items: cityData.keys.map((String city) {
-                return DropdownMenuItem<String>(
-                  value: city,
-                  child: Text(
-                    city,
-                    style: TextStyle(fontSize: 15),
-                  ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedCity = value;
-                });
-              },
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 30),
-            if (selectedCity != null)
-              Expanded(
-                child: ListView(
-                  children: cityData[selectedCity!]!.entries.map((entry) {
-                    return ExpansionTile(
-                      title: Text(
-                        entry.key,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      children: entry.value
-                          .map((item) => PlaceTile(
-                                name: item['name']!,
-                                imageUrl: item['image']!,
-                                fontSize: 12,
-                              ))
-                          .toList(),
-                    );
-                  }).toList(),
-                ),
-              ),
+            SizedBox(height: 40),
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            SizedBox(height: 24),
+            ElevatedButton(onPressed: _login, child: Text('Login')),
+            SizedBox(height: 12),
+            _socialButton('Login with Google', Icons.g_mobiledata, Colors.red),
+            SizedBox(height: 8),
+            _socialButton('Login with Facebook', Icons.facebook, Colors.blue),
+            TextButton(onPressed: _goToSignup, child: Text('Create Account')),
           ],
         ),
       ),
@@ -272,37 +113,487 @@ class _CitySelectionPageState extends State<CitySelectionPage> {
   }
 }
 
-ListView({required List<ExpansionTile> children}) {
+class SignupPage extends StatefulWidget {
+  @override
+  _SignupPageState createState() => _SignupPageState();
 }
 
-class PlaceTile extends StatelessWidget {
-  final String name;
-  final String imageUrl;
-  final double fontSize;
+class _SignupPageState extends State<SignupPage> {
+  final _newUsernameController = TextEditingController();
+  final _newPasswordController = TextEditingController();
 
-  const PlaceTile({
-    required this.name,
-    required this.imageUrl,
-    this.fontSize = 16,
-  });
+  void _signup() {
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          imageUrl,
-          width: 60,
-          height: 60,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) =>
-              Icon(Icons.image_not_supported, size: 60),
+    return Scaffold(
+      appBar: AppBar(title: Text('Create Account')),
+      body: Padding(
+        padding: EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _newUsernameController,
+              decoration: InputDecoration(labelText: 'New Username'),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: _newPasswordController,
+              decoration: InputDecoration(labelText: 'New Password'),
+              obscureText: true,
+            ),
+            SizedBox(height: 24),
+            ElevatedButton(onPressed: _signup, child: Text('Sign Up')),
+          ],
         ),
       ),
-      title: Text(
-        name,
-        style: TextStyle(fontSize: fontSize),
+    );
+  }
+}
+
+class CityListScreen extends StatefulWidget {
+  final Function(bool) toggleTheme;
+  final bool isDarkTheme;
+
+  CityListScreen({required this.toggleTheme, required this.isDarkTheme});
+
+  @override
+  _CityListScreenState createState() => _CityListScreenState();
+}
+
+class _CityListScreenState extends State<CityListScreen> {
+  final Map<String, dynamic> indianCitiesData = {
+  'Delhi': {
+    'image':
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxpAwSRYBrM--zDxopocNPBKkGPChEaGFegA&s',
+    'touristPlaces': [
+      {
+        'name': 'Red Fort',
+        'image':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSSjG1bBqwJMC6oMCuwkl00RHcu_5d4z-rlw&s'
+      },
+      {
+        'name': 'India Gate',
+        'image':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWozoUT-H1zLANPW_u6IVEnz6VOsBn7oIELg&s'
+      },
+    ],
+    'airports': ['Indira Gandhi International Airport'],
+    'railwayStations': ['New Delhi', 'Old Delhi'],
+    'famousFoods': ['Chaat', 'Butter Chicken', 'Paranthas'],
+  },
+  'Mumbai': {
+    'image':
+        'https://www.andbeyond.com/wp-content/uploads/sites/5/Chhatrapati-Shivaji-Terminus-railway-station-mumbai.jpg',
+    'touristPlaces': [
+      {
+        'name': 'Gateway of India',
+        'image':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtZmCX_SlTGb48361Cxp5fRYaMKOYfhaZBgg&s'
+      },
+      {
+        'name': 'Marine Drive',
+        'image':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1pxe8vkKTt3WMVvUY7d9iPHNPkPqkuuyN6Q&s2'
+      },
+    ],
+    'airports': ['Chhatrapati Shivaji Maharaj International Airport'],
+    'railwayStations': ['Chhatrapati Shivaji Terminus', 'Dadar', 'Bandra'],
+    'famousFoods': ['Vada Pav', 'Pav Bhaji', 'Bhel Puri'],
+  },
+  'Kolkata': {
+    'image':
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRt-kwAEGoXypRWLrgkQgf2fBboQ7GoQhU_Q&s',
+    'touristPlaces': [
+      {
+        'name': 'Victoria Memorial',
+        'image':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvoEzYVZ_BCRukoSyDvTLydrnWIX3ig79gMt4IFTfI_OLuh9qWNkfsnXNsC8ooA-BDFGU&usqp=CAU'
+      },
+      {
+        'name': 'Howrah Bridge',
+        'image':
+            'https://t3.ftcdn.net/jpg/05/13/90/60/360_F_513906092_d8lNk5eccxrZV1ol4KxPzSLFhMtSt3wa.jpg'
+      },
+    ],
+    'airports': ['Netaji Subhas Chandra Bose International Airport'],
+    'railwayStations': ['Howrah Junction', 'Sealdah'],
+    'famousFoods': ['Rosogolla', 'Mishti Doi', 'Kathi Roll'],
+  },
+  'Chennai': {
+    'image':
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFkc8shuAfmfrNvRohXY_CQGpriVKOOzKJrg&s',
+    'touristPlaces': [
+      {
+        'name': 'Marina Beach',
+        'image':
+            'https://img.staticmb.com/mbcontent/images/uploads/2022/9/Marina-Beach-Aerial-view.jpg'
+      },
+      {
+        'name': 'Fort St. George',
+        'image':
+            'https://narrativeby.com/wp-content/uploads/2023/09/Fort-St.-George-1024x576.webp'
+      },
+    ],
+    'airports': ['Chennai International Airport'],
+    'railwayStations': ['Chennai Central', 'Chennai Egmore'],
+    'famousFoods': ['Idli', 'Dosa', 'Filter Coffee'],
+  },
+  'Bengaluru': {
+    'image':
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr3PFUBCG-MiP74_3TVAUzyZ9NW4uv9paGXQ&s',
+    'touristPlaces': [
+      {
+        'name': 'Lalbagh Botanical Garden',
+        'image':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo2Wi_feXjfJ4gsEabN6EnQyEsbLltJ2UB0Q&s'
+      },
+      {
+        'name': 'Bangalore Palace',
+        'image':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVq4m5Xw5G1dQVh4RfuMSbU8iwsVqnbWGhAA&s'
+      },
+    ],
+    'airports': ['Kempegowda International Airport'],
+    'railwayStations': ['Bangalore City Railway Station'],
+    'famousFoods': ['Bisi Bele Bath', 'Mysore Pak', 'Dosa'],
+  },
+};
+
+     
+    // Add more cities if needed
+  
+
+  String _searchQuery = '';
+
+  Widget _buildSection(String title, List<Widget> items) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepOrange)),
+          SizedBox(height: 6),
+          ...items,
+        ],
+      ),
+    );
+  }
+
+  void _showSimpleDialog(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text('Close')),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final filteredCities = indianCitiesData.entries.where((entry) =>
+
+        entry.key.toLowerCase().contains(_searchQuery.toLowerCase()));
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Indian Cities Travel Info'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () => _showSimpleDialog(
+              'Profile',
+              'User: Traveler\nLanguages: हिंदी, தமிழ், বাংলা, ಕನ್ನಡ, English, తెలుగు',
+            ),
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.deepOrange),
+              child: Text('Menu',
+                  style: TextStyle(color: Colors.white, fontSize: 24)),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('About Us'),
+              onTap: () => _showSimpleDialog('About Us',
+                  'This app provides travel information for Indian cities.'),
+            ),
+            ListTile(
+              leading: Icon(Icons.privacy_tip),
+              title: Text('Privacy Policy'),
+              onTap: () => _showSimpleDialog('Privacy Policy',
+                  'Your data is handled securely and not shared with third parties.'),
+            ),
+            ListTile(
+              leading: Icon(Icons.help),
+              title: Text('Help'),
+              onTap: () => _showSimpleDialog(
+                  'Help', 'For assistance, email us at support@indiatravel.com'),
+            ),
+            ListTile(
+              leading: Icon(Icons.contact_mail),
+              title: Text('Contact Us'),
+              onTap: () => _showSimpleDialog(
+                  'Contact Us', 'Email: contact@indiatravel.com\nPhone: +91-1234567890'),
+            ),
+            ListTile(
+              leading: Icon(Icons.description),
+              title: Text('Terms and Conditions'),
+              onTap: () => _showSimpleDialog(
+                  'Terms and Conditions',
+                  'By using this app, you agree to the terms and conditions.'),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsPage(
+                      toggleTheme: widget.toggleTheme,
+                      isDarkTheme: widget.isDarkTheme,
+                    ),
+                  ),
+                );
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => LoginPage(
+                    toggleTheme: widget.toggleTheme,
+                    isDarkTheme: widget.isDarkTheme,
+                  )),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(8),
+            child: TextField(
+              decoration: InputDecoration(
+                  labelText: 'Search city',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder()),
+              onChanged: (value) => setState(() => _searchQuery = value),
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              children: filteredCities.map((entry) {
+                final cityName = entry.key;
+                final city = entry.value;
+
+                return Card(
+                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  elevation: 6,
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(cityName,
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 8),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            city['image'] as String,
+                            height: 180,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Container(
+                              height: 180,
+                              color: Colors.grey[300],
+                              alignment: Alignment.center,
+                              child: Icon(Icons.broken_image,
+                                  size: 80, color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        _buildSection(
+                          'Tourist Places',
+                          (city['touristPlaces'] as List).map<Widget>((place) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(6),
+                                    child: Image.network(
+                                      place['image'],
+                                      height: 60,
+                                      width: 60,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => Container(
+                                        height: 60,
+                                        width: 60,
+                                        color: Colors.grey[300],
+                                        alignment: Alignment.center,
+                                        child: Icon(Icons.broken_image,
+                                            size: 30, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(place['name'],
+                                        style: TextStyle(fontSize: 16)),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        _buildSection(
+                          'Airports',
+                          (city['airports'] as List)
+                              .map<Widget>((airport) => Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 2),
+                                    child: Text('• $airport',
+                                        style: TextStyle(fontSize: 16)),
+                                  ))
+                              .toList(),
+                        ),
+                        _buildSection(
+                          'Railway Stations',
+                          (city['railwayStations'] as List)
+                              .map<Widget>((station) => Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 2),
+                                    child: Text('• $station',
+                                        style: TextStyle(fontSize: 16)),
+                                  ))
+                              .toList(),
+                        ),
+                        _buildSection(
+                          'Famous Foods',
+                          (city['famousFoods'] as List)
+                              .map<Widget>((food) => Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 2),
+                                    child: Text('• $food',
+                                        style: TextStyle(fontSize: 16)),
+                                  ))
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+mixin cityData {
+  var entries;
+}
+
+class SettingsPage extends StatefulWidget {
+  final Function(bool) toggleTheme;
+  final bool isDarkTheme;
+
+  SettingsPage({required this.toggleTheme, required this.isDarkTheme});
+
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  String _selectedLanguage = 'English';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Settings')),
+      body: ListView(
+        padding: EdgeInsets.all(16),
+        children: [
+          SwitchListTile(
+            title: Text('Dark Theme'),
+            value: widget.isDarkTheme,
+            onChanged: (val) {
+              widget.toggleTheme(val);
+              setState(() {});
+            },
+          ),
+          SizedBox(height: 12),
+          Text('Choose Language',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          DropdownButton<String>(
+            value: _selectedLanguage,
+            onChanged: (String? value) {
+              setState(() {
+                _selectedLanguage = value!;
+              });
+            },
+            items: [
+              'English',
+              'हिंदी',
+              'தமிழ்',
+              'বাংলা',
+              'ಕನ್ನಡ',
+              'తెలుగు',
+            ].map<DropdownMenuItem<String>>((lang) {
+              return DropdownMenuItem<String>(
+                value: lang,
+                child: Text(lang),
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 20),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.privacy_tip),
+            title: Text('App Privacy'),
+            subtitle: Text(
+                'Your personal data is kept confidential and never shared.'),
+          ),
+          ListTile(
+            leading: Icon(Icons.security),
+            title: Text('Security'),
+            subtitle: Text(
+                'This app uses secure login and data encryption techniques.'),
+          ),
+        ],
       ),
     );
   }
